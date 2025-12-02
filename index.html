@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raminhos Gallery - Portfólio Inovador</title>
+    <!-- Carrega o Tailwind CSS para styling rápido e responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuração do Tailwind para usar uma fonte moderna e cores personalizadas -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        /* Define a fonte Inter como padrão e cores base */
+        :root {
+            --color-primary: #1F2937; /* Cinza escuro para texto/fundo */
+            --color-accent: #059669; /* Verde esmeralda para destaque */
+            --color-background: #F9FAFB; /* Fundo muito claro */
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-primary);
+        }
+
+        /* Classe para o efeito de desfoque/escurecimento ao abrir a Lightbox */
+        .content-blurred {
+            filter: blur(4px) brightness(0.7);
+            pointer-events: none;
+            transition: filter 0.3s ease;
+        }
+
+        /* Classe para as imagens que entrarão com animação */
+        .gallery-item-hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        /* Classe para a imagem animada que já está visível */
+        .gallery-item-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Lightbox (Modal) para exibir a imagem em destaque -->
+    <!-- Inicialmente escondida e fixa sobre todo o viewport -->
+    <div id="lightbox" class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center hidden" onclick="closeLightbox()">
+        
+        <!-- Botão de Fechar -->
+        <button class="absolute top-4 right-4 text-white text-3xl p-3 bg-gray-800 rounded-full hover:bg-red-600 transition duration-300" aria-label="Fechar Galeria" onclick="closeLightbox(event)">
+            &times;
+        </button>
+
+        <!-- Imagem Ampliada -->
+        <div class="max-w-4xl max-h-4/5 p-4">
+            <img id="lightbox-image" class="w-full h-auto max-h-full object-contain rounded-lg shadow-2xl" src="" alt="Imagem Ampliada">
+            <p id="lightbox-caption" class="text-center text-white mt-4 text-lg font-light"></p>
+        </div>
+    </div>
+    
+    <!-- Container Principal do Conteúdo (Será esbatido/blur quando a lightbox estiver aberta) -->
+    <div id="main-content" class="transition-all duration-300">
+
+        <!-- Cabeçalho (Header) Fixo -->
+        <header class="sticky top-0 z-40 bg-white shadow-md">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <!-- Título/Logotipo -->
+                <h1 class="text-3xl font-extrabold text-gray-900 tracking-wider">
+                    Raminhos <span class="text-[var(--color-accent)]">Gallery</span>
+                </h1>
+                <!-- Navegação (Desktop) -->
+                <nav class="hidden md:block">
+                    <a href="#gallery" class="text-gray-600 hover:text-[var(--color-accent)] mx-3 transition duration-200 font-medium">Galeria</a>
+                    <a href="#about" class="text-gray-600 hover:text-[var(--color-accent)] mx-3 transition duration-200 font-medium">Sobre</a>
+                    <a href="#contact" class="text-white bg-[var(--color-accent)] hover:bg-emerald-700 ml-4 py-2 px-4 rounded-full shadow-lg transition duration-200">Contacto</a>
+                </nav>
+                <!-- Menu Hamburger (Mobile - Opcional, mantemos limpo por agora) -->
+            </div>
+        </header>
+
+        <!-- Seção Hero/Introdução -->
+        <section class="text-center py-20 bg-gray-50/50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-5xl md:text-6xl font-black mb-4 text-[var(--color-primary)]">
+                    Arte & Inovação. <span class="block text-[var(--color-accent)] mt-2">Veja o Invisível.</span>
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+                    Um portfólio curado de obras que desafiam a percepção e redefinem a estética moderna.
+                </p>
+                <a href="#gallery" class="inline-block py-3 px-8 bg-[var(--color-accent)] text-white text-lg font-semibold rounded-full hover:bg-emerald-700 transition duration-300 shadow-xl transform hover:scale-105">
+                    Explorar a Galeria
+                </a>
+            </div>
+        </section>
+
+        <!-- Seção da Galeria Principal -->
+        <section id="gallery" class="py-16 md:py-24 container mx-auto px-4">
+            <h3 class="text-4xl font-bold text-center mb-12 text-[var(--color-primary)]">Obras Recentes</h3>
+            
+            <!-- Grid Responsivo para as Imagens -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+                <!-- Item da Galeria 1 -->
+                <div class="gallery-item cursor-pointer group rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-1 gallery-item-hidden" 
+                     data-image="https://placehold.co/800x600/1E40AF/FFFFFF?text=Projecto+Alfa" 
+                     data-caption="Projecto Alfa: Linhas de fuga na paisagem urbana. (Óleo sobre tela)">
+                    <img class="w-full h-64 object-cover transition duration-500 group-hover:scale-105" 
+                         src="https://placehold.co/400x300/1E40AF/FFFFFF?text=Projecto+Alfa" alt="Projecto Alfa">
+                    <div class="p-4 bg-white">
+                        <p class="text-lg font-semibold">Projecto Alfa</p>
+                        <p class="text-sm text-gray-500">2024 - Pintura Digital</p>
+                    </div>
+                </div>
+
+                <!-- Item da Galeria 2 -->
+                <div class="gallery-item cursor-pointer group rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-1 gallery-item-hidden" 
+                     data-image="https://placehold.co/900x900/4B5563/FFFFFF?text=A+Espiral+Cromática" 
+                     data-caption="A Espiral Cromática: Uma exploração da teoria das cores. (Fotografia abstrata)">
+                    <img class="w-full h-64 object-cover transition duration-500 group-hover:scale-105" 
+                         src="https://placehold.co/400x300/4B5563/FFFFFF?text=A+Espiral+Cromática" alt="A Espiral Cromática">
+                    <div class="p-4 bg-white">
+                        <p class="text-lg font-semibold">A Espiral Cromática</p>
+                        <p class="text-sm text-gray-500">2023 - Escultura</p>
+                    </div>
+                </div>
+                
+                <!-- Item da Galeria 3 -->
+                <div class="gallery-item cursor-pointer group rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-1 gallery-item-hidden" 
+                     data-image="https://placehold.co/1000x700/D97706/FFFFFF?text=Metamorfose+IV" 
+                     data-caption="Metamorfose IV: Estudo de movimento e forma. (Desenho a carvão)">
+                    <img class="w-full h-64 object-cover transition duration-500 group-hover:scale-105" 
+                         src="https://placehold.co/400x300/D97706/FFFFFF?text=Metamorfose+IV" alt="Metamorfose IV">
+                    <div class="p-4 bg-white">
+                        <p class="text-lg font-semibold">Metamorfose IV</p>
+                        <p class="text-sm text-gray-500">2024 - Instalação</p>
+                    </div>
+                </div>
+                
+                <!-- Item da Galeria 4 -->
+                <div class="gallery-item cursor-pointer group rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-1 gallery-item-hidden" 
+                     data-image="https://placehold.co/700x500/10B981/FFFFFF?text=O+Vazio+e+o+Pleno" 
+                     data-caption="O Vazio e o Pleno: Um conceito minimalista em acrílico. (Acrílico sobre tela)">
+                    <img class="w-full h-64 object-cover transition duration-500 group-hover:scale-105" 
+                         src="https://placehold.co/400x300/10B981/FFFFFF?text=O+Vazio+e+o+Pleno" alt="O Vazio e o Pleno">
+                    <div class="p-4 bg-white">
+                        <p class="text-lg font-semibold">O Vazio e o Pleno</p>
+                        <p class="text-sm text-gray-500">2023 - Pintura</p>
+                    </div>
+                </div>
+
+                <!-- Mais itens para forçar o scroll e a animação -->
+                <div class="gallery-item cursor-pointer group rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-1 gallery-item-hidden" 
+                     data-image="https://placehold.co/800x1200/F59E0B/FFFFFF?text=Retrato+Sutil" 
+                     data-caption="Retrato Sutil: Capturando a essência através da luz suave. (Grafite)">
+                    <img class="w-full h-64 object-cover transition duration-500 group-hover:scale-105" 
+                         src="https://placehold.co/400x300/F59E0B/FFFFFF?text=Retrato+Sutil" alt="Retrato Sutil">
+                    <div class="p-4 bg-white">
+                        <p class="text-lg font-semibold">Retrato Sutil</p>
+                        <p class="text-sm text-gray-500">2024 - Desenho</p>
+                    </div>
+                </div>
+                <div class="gallery-item cursor-pointer group rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-1 gallery-item-hidden" 
+                     data-image="https://placehold.co/1200x800/EF4444/FFFFFF?text=Estrutura+Orgânica" 
+                     data-caption="Estrutura Orgânica: Combinação de materiais reciclados. (Arte Mista)">
+                    <img class="w-full h-64 object-cover transition duration-500 group-hover:scale-105" 
+                         src="https://placehold.co/400x300/EF4444/FFFFFF?text=Estrutura+Orgânica" alt="Estrutura Orgânica">
+                    <div class="p-4 bg-white">
+                        <p class="text-lg font-semibold">Estrutura Orgânica</p>
+                        <p class="text-sm text-gray-500">2024 - Mista</p>
+                    </div>
+                </div>
+                <div class="gallery-item cursor-pointer group rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-1 gallery-item-hidden" 
+                     data-image="https://placehold.co/600x600/3B82F6/FFFFFF?text=Digital+Dreamscape" 
+                     data-caption="Digital Dreamscape: Fronteiras entre o real e o virtual. (Arte Digital)">
+                    <img class="w-full h-64 object-cover transition duration-500 group-hover:scale-105" 
+                         src="https://placehold.co/400x300/3B82F6/FFFFFF?text=Digital+Dreamscape" alt="Digital Dreamscape">
+                    <div class="p-4 bg-white">
+                        <p class="text-lg font-semibold">Digital Dreamscape</p>
+                        <p class="text-sm text-gray-500">2023 - Digital</p>
+                    </div>
+                </div>
+                <div class="gallery-item cursor-pointer group rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-1 gallery-item-hidden" 
+                     data-image="https://placehold.co/700x1000/EC4899/FFFFFF?text=Reflexos" 
+                     data-caption="Reflexos: O contraste da luz na escuridão. (Técnica Mista)">
+                    <img class="w-full h-64 object-cover transition duration-500 group-hover:scale-105" 
+                         src="https://placehold.co/400x300/EC4899/FFFFFF?text=Reflexos" alt="Reflexos">
+                    <div class="p-4 bg-white">
+                        <p class="text-lg font-semibold">Reflexos</p>
+                        <p class="text-sm text-gray-500">2024 - Acrílico</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Seção Sobre (About) -->
+        <section id="about" class="py-16 bg-gray-100/70">
+            <div class="container mx-auto px-4 max-w-4xl">
+                <h3 class="text-4xl font-bold text-center mb-6 text-[var(--color-primary)]">Sobre a Raminhos Gallery</h3>
+                <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                    A Raminhos Gallery é um espaço digital dedicado à curadoria de arte visual que transcende o tradicional. Nosso foco está em peças inovadoras que combinam técnicas clássicas com o dinamismo da arte digital e instalações. Acreditamos que o portfólio deve ser uma experiência, não apenas uma coleção.
+                </p>
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    Cada obra aqui presente foi selecionada pela sua capacidade de provocar, inspirar e contar uma história única. Explore o trabalho e sinta a diferença de uma abordagem artística focada no futuro.
+                </p>
+            </div>
+        </section>
+        
+        <!-- Rodapé (Footer) e Contacto -->
+        <footer id="contact" class="py-10 bg-[var(--color-primary)]">
+            <div class="container mx-auto px-4 text-center">
+                <h4 class="text-2xl font-semibold text-white mb-4">Entre em Contato</h4>
+                <p class="text-gray-300 mb-6">Para consultas de obras ou colaborações, utilize o email abaixo:</p>
+                <a href="mailto:contacto@raminhosgallery.com" class="text-[var(--color-accent)] hover:text-emerald-400 text-lg font-medium transition duration-200">
+                    contacto@raminhosgallery.com
+                </a>
+                <div class="mt-8 pt-6 border-t border-gray-700">
+                    <p class="text-gray-500 text-sm">&copy; 2024 Raminhos Gallery. Todos os direitos reservados.</p>
+                </div>
+            </div>
+        </footer>
+
+    </div> <!-- Fim do main-content -->
+
+    <script>
+        // Variáveis globais para os elementos da Lightbox
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightbox-image');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+        const mainContent = document.getElementById('main-content');
+        
+        /**
+         * Abre a Lightbox com a imagem e a legenda corretas.
+         * @param {string} imageURL - URL da imagem grande.
+         * @param {string} caption - Legenda da obra.
+         */
+        function openLightbox(imageURL, caption) {
+            lightboxImage.src = imageURL;
+            lightboxCaption.textContent = caption;
+            lightbox.classList.remove('hidden');
+            
+            // Adiciona a classe de desfoque/escurecimento ao conteúdo principal
+            mainContent.classList.add('content-blurred');
+            
+            // Impede o scroll do body quando a modal está aberta
+            document.body.style.overflow = 'hidden';
+        }
+
+        /**
+         * Fecha a Lightbox e remove o desfoque.
+         * @param {Event} event - O evento de clique (opcional).
+         */
+        function closeLightbox(event) {
+            // Se houver um evento e o alvo não for a própria lightbox (ou seja, o clique foi na imagem ou botão),
+            // isso impede que o clique feche a modal, mas permite que o clique no fundo a feche.
+            if (event && (event.target === lightboxImage || event.target.closest('button'))) {
+                return; 
+            }
+
+            lightbox.classList.add('hidden');
+            mainContent.classList.remove('content-blurred');
+            
+            // Restaura o scroll do body
+            document.body.style.overflow = '';
+        }
+
+        // 1. Inicializa o Listener para a Lightbox
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const imageURL = item.getAttribute('data-image');
+                const caption = item.getAttribute('data-caption');
+                openLightbox(imageURL, caption);
+            });
+        });
+
+        // 2. Animação: Intersection Observer para elementos que aparecem ao rolar
+        // Esta função torna o site mais dinâmico e chamativo.
+        
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        
+        const observerOptions = {
+            root: null, // Observa o viewport
+            threshold: 0.1, // A animação dispara quando 10% do item estiver visível
+            rootMargin: '0px'
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Se o item está visível, adiciona a classe de animação completa
+                    entry.target.classList.remove('gallery-item-hidden');
+                    entry.target.classList.add('gallery-item-visible');
+                    // Opcional: Para executar a animação apenas uma vez:
+                    // observer.unobserve(entry.target); 
+                } else {
+                    // Para reverter a animação ao sair da viewport (opcional, remova se quiser só one-shot)
+                    // entry.target.classList.remove('gallery-item-visible');
+                    // entry.target.classList.add('gallery-item-hidden');
+                }
+            });
+        }, observerOptions);
+
+        // Observa cada item da galeria
+        galleryItems.forEach(item => {
+            observer.observe(item);
+        });
+        
+        
+        // 3. Adiciona listener para fechar a Lightbox com a tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+                closeLightbox();
+            }
+        });
+
+        // Exemplo de como usar o fallback de imagem caso a URL falhe (boa prática)
+        document.querySelectorAll('.gallery-item img').forEach(img => {
+            img.onerror = function() {
+                img.src = "https://placehold.co/400x300/CCCCCC/666666?text=Erro+Carregamento";
+            }
+        });
+
+    </script>
+</body>
+</html>
